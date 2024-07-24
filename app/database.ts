@@ -1,0 +1,113 @@
+import { MongoClient } from "mongodb";
+
+const uri = "mongodb://localhost:27017";
+const client = new MongoClient(uri);
+
+
+export type FahrasItem = { id: string, title: string, count: number };
+export type BookItem = { id: string, title: string, babs: { title: string, bab_id: string, count: number }[] }
+export type BabItem = { 
+    book_id: string, 
+    book_title: string,
+    bab: {
+        bab_id: string, 
+        title: string, 
+        text: {
+            plain: string,
+            charh: string
+        }[],
+    } 
+}
+
+export class AlMuwattta {
+
+    public static async getFahras(): Promise<Array<FahrasItem>> {
+        const database = client.db('al-muwatta')
+        const books = database.collection('books')
+    
+        const fahras = await books.find({}, {
+            projection: {
+                _id: 0,
+                id: 1,
+                title: 1,
+                count: {
+                    $size: '$babs'
+                }
+            }
+        })
+
+        let array = new Array()
+
+        for await (const i of fahras) {
+            array.push(i)
+        }
+
+        return array;
+    }
+
+    public static async getBook(book_id: number): Promise<BookItem> {
+        const database = client.db('al-muwatta')
+        const books = database.collection('books')
+
+        let book = await books.findOne({ id: book_id }, {
+            projection: {
+                _id: 0,
+                id: 1,
+                title: 1,
+                babs: {
+                    $map: {
+                        input: '$babs',
+                        in: {
+                            title: '$$this.title',
+                            bab_id: '$$this.bab_id',
+                            count: {
+                                $size: '$$this.text'
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        return book as unknown as BookItem;
+    }
+
+    public static async getBab(book_id: number, bab_id: number) {
+        const database = client.db('al-muwatta')
+        const books = database.collection('books')
+
+        let bab = await books.findOne({ id: book_id }, {
+            projection: {
+                _id: 0,
+                book_title: '$title',
+                book_id: '$id',
+                bab: {
+                    $arrayElemAt: [
+                        '$babs',
+                        bab_id
+                    ]
+                }
+            }
+        })
+
+        return bab
+    }
+
+    public static async saveCharh(book_id: number, bab_id: number, hadith_id: number, charh: string) {
+        const database = client.db('al-muwatta')
+        const books = database.collection('books')
+
+        const charhProperty = `babs.${bab_id}.text.${hadith_id}.charh`.toString()
+        let set: any = {}
+        set[charhProperty] = charh
+
+
+        books.updateOne({
+            id: book_id,
+            },
+            {
+                $set: set
+            }
+        );
+    }
+}
