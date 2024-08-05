@@ -12,7 +12,7 @@ export async function getStaticPaths() {
                 book_id: item.id.toString(),
             }
          })),
-        fallback: false
+        fallback: "blocking"
     }
 }
 
@@ -22,7 +22,8 @@ export async function getStaticProps({ params }: { params: { book_id: string } }
     return {
         props: {
             book: book
-        }
+        },
+        revalidate: 20,
     }
 }
 

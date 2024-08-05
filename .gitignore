@@ -34,3 +34,7 @@ next-env.d.ts
 
 # certificates
 certificates
+
+**/.git
+
+build

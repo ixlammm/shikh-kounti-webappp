@@ -1,7 +1,7 @@
 import { createRef, MutableRefObject, PropsWithChildren, Ref, RefObject, useEffect, useRef, useState } from "react";
-import { MeetUserAvatar } from "./MeetUserAvatar";
+import MeetUserAvatar from "./MeetUserAvatar";
 import clsx from "clsx";
-import { LocalUserMediaStream, OnlineUserMediaStream, StreamState, StreamVideo } from "../[roomId]/stream";
+import { LocalUserMediaStream, OnlineUserMediaStream, StreamState, StreamVideo } from "@/components/stream";
 import { SimpleEventListener, SimpleEventListenerType } from "./simpleEventListener";
 
 export type MeetUserState = {
@@ -100,7 +100,7 @@ export class MeetUserHandler extends SimpleEventListener<MeetUserHandlerEvent> {
     }
 }
 
-export function MeetUserStreamCard(props: React.HTMLProps<HTMLElement> & { handler: MeetUserHandler }) {
+export default function MeetUserStreamCard(props: React.HTMLProps<HTMLElement> & { handler: MeetUserHandler }) {
 
     const [videoState, setVideoState] = useState<StreamState>(props.handler.state.video_state)
     const [audioState, setAudioState] = useState<StreamState>(props.handler.state.audio_state)

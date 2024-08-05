@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { PropsWithChildren } from "react";
 
-export function MeetUserAvatar({ initials, className, children, textColor= "white" }: PropsWithChildren & { initials: string, className?: string, textColor?: string } ) {
+export default function MeetUserAvatar({ initials, className, children, textColor= "white" }: PropsWithChildren & { initials: string, className?: string, textColor?: string } ) {
     return (
         <>
             {children}

@@ -59,18 +59,12 @@ export class Notification<T = NotificationHandler> {
 export class NotificationHandler {
 
 
-    public readonly notifs: Array<Notification>
-    public readonly setNotifs: (notifs: Array<Notification>) => void;
-
-    public constructor() {
-        const [notifs, setNotifs] = useState<Array<Notification>>([])
-        this.notifs = notifs
-        this.setNotifs = (notifs) => setNotifs(notifs) 
-    }
+    public notifs?: Array<Notification>
+    public setNotifs?: (notifs: Array<Notification>) => void;
 
     public showNotification(notif: Notification) {
-        this.setNotifs([
-            ...this.notifs,
+        this.setNotifs?.call(this, [
+            ...this.notifs ?? [],
             notif
         ])
         notif.show()
@@ -79,15 +73,25 @@ export class NotificationHandler {
 
     public removeNotification(notif: Notification) {
         console.log(notif)
-        this.setNotifs(this.notifs.filter(n => n.ref != notif.ref))
+        this.setNotifs?.call(this, this.notifs?.filter(n => n.ref != notif.ref) ?? [])
     }
 }
 
-export function NotificationWrapper({ handler }: { handler: NotificationHandler }) {
+export default function NotificationWrapper({ handler }: { handler: NotificationHandler }) {
+
+    const [notifs, setNotifs] = useState<Array<Notification>>([])
+
+    useEffect(() => {
+        handler.notifs = notifs
+        handler.setNotifs = (notifs) => setNotifs(notifs) 
+    }, [handler])
+
+
+
     return (
         <div className="absolute overflow-hidden top-0 right-0 flex flex-col gap-5 p-5 justify-start">
             {
-                handler.notifs.map((notif, i) => (
+                handler.notifs?.map((notif, i) => (
                     <div key={i}>{notif.build()}</div>
                 ))
             }

@@ -36,6 +36,6 @@
     "build/types/**/*.ts"
 , "app/api/rooms/new/route.ts", "rooms.ts"  ],
   "exclude": [
-    "node_modules"
+    "**/node_modules"
   ]
 }

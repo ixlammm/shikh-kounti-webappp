@@ -2,15 +2,15 @@
 import { createRef, useEffect, useRef, useState } from "react";
 import { NextApiRequest } from "next";
 import { Button, Toast, Spinner } from "flowbite-react"
-import { MeetClient } from "./meet"
-import { CameraStream, LocalUserMediaStream, OnlineUserMediaStream } from "./stream"
-import { NotificationHandler, NotificationWrapper } from "../components/Notification";
-import { MeetNotificationHandler } from "../components/MeetNotification";
-import { MeetUserHandler, MeetUserState, MeetUserStreamCard } from "../components/MeetUserStreamCard";
-import { MeetToolbar, MeetToolbarHandler } from "../components/MeetToolbar";
+import { MeetClient } from "@/components/meet"
+import { CameraStream, LocalUserMediaStream, OnlineUserMediaStream } from "@/components/stream"
+import  NotificationWrapper, { NotificationHandler } from "../../../components/Notification";
+import { MeetNotificationHandler } from "@/components/MeetNotification";
+import MeetUserStreamCard, { MeetUserHandler, MeetUserState } from "../../../components/MeetUserStreamCard";
+import MeetToolbar, { MeetToolbarHandler } from "../../../components/MeetToolbar";
 import { MediaKind } from "mediasoup-client/lib/RtpParameters";
-import { ToastHandler, ToastWrapper } from "../components/Toast";
-import { MeetToastHandler } from "../components/MeetToast";
+import ToastWrapper, { ToastState } from "../../../components/Toast";
+import { MeetToastHandler } from "@/components/MeetToast";
 
 export async function getServerSideProps({ params, req } : { params: { roomId: string }, req: NextApiRequest }) {
     const { roomId } = params;
@@ -200,8 +200,8 @@ export default function Home({ roomId, token, session } : { roomId: string, toke
                         }
                     </div>
                 </div>
-
-                <NotificationWrapper handler={notificationHandler}/>
+                
+               <NotificationWrapper handler={notificationHandler}/>
                 <ToastWrapper handler={toastHandler}/>
                 <MeetToolbar handler={toolbarHandler} className="flex-none" />
             </div>

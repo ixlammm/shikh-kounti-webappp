@@ -10,11 +10,12 @@ import Fahras from "@/app/components/fahras";
 // const uri = "mongodb+srv://ixlammm:dpMWVJEDMQiFhw1p@al-muwatta.ayvkr7g.mongodb.net/?retryWrites=true&w=majority&appName=al-muwatta";
 
 export async function getStaticProps() {
+    const fahras = await AlMuwattta.getFahras()
     return {
         props: {
-            fahras: await AlMuwattta.getFahras()
+            fahras: fahras
         },
-        revalidate: 60
+        revalidate: 20
     }
 }
 

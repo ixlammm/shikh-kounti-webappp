@@ -6,7 +6,7 @@ export class NeuralSpaceSession {
 
     public constructor(token: string) {
         this.id = uuidv4();
-        let language = "en"
+        let language = "ar"
         let max_chunk_size = 5
         let vad_threshold = 0.5
         let disable_partial = "false"
@@ -19,22 +19,17 @@ export class NeuralSpaceSession {
 
 export class NeuralSpace {
 
-    public static async createSession(api_key: string, duration?: number): Promise<NeuralSpaceSession | null> {
-        let TOKEN_URL = "https://voice.neuralspace.ai/api/v1/token"
-        if (duration) TOKEN_URL += `?duration=${duration}`
-        let response = await fetch(TOKEN_URL, {
-            method: 'GET',
-            headers: {
-                'Authorization': api_key
-            }
+    public static async createSession(): Promise<NeuralSpaceSession | null> {
+        let response = await fetch('/api/transcribe', {
+            method: 'POST',
+            credentials: 'include'
         })
         if (response.status == 200) {
-            let message = await response.json()
-            return new NeuralSpaceSession(message["data"]["token"]);
+            let token_or_error = await response.json()
+            if (token_or_error.token) {
+                return new NeuralSpaceSession(token_or_error.token)
+            }
         }
-        else {
-            console.error("Can't create a session, check your api key")
-            return null;
-        }
+        return null;
     }
 }

@@ -6,17 +6,6 @@ const nextConfig = {
         instrumentationHook: true
     },
     distDir: 'build',
-    webpack(config, context) {
-        config.plugins.push(new CopyPlugin({
-            patterns: [
-                {
-                    from: './node_modules/mediasoup/worker/',
-                    to: './worker/'
-                }
-            ]
-        }))
-        return config;
-    },
     headers() {
         return [
             {

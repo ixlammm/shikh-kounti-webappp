@@ -30,7 +30,8 @@
     "rxdb": "^15.28.0",
     "socket.io-client": "^4.7.5",
     "supports-color": "8.1.1",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "nebula-meet": "file:..\\nebula-meet"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.30",
@@ -40,9 +41,11 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
-    "nebula-meet": "1.0.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "resolutions": {
+    "terser": "3.14.1"
   }
 }

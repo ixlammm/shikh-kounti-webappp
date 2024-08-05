@@ -1,8 +1,8 @@
 import { BsFillCameraVideoFill, BsFillCameraVideoOffFill, BsFillMicFill, BsFillMicMuteFill, BsFillTelephoneXFill } from "react-icons/bs";
-import { Button } from "./Button";
-import { MutableRefObject, useRef, useState } from "react";
-import { SimpleEventListener } from "./simpleEventListener";
-import { LocalUserMediaStream, StreamState, UserMediaStream } from "../[roomId]/stream";
+import Button from "./Button";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { SimpleEventListener } from "@/components/simpleEventListener";
+import { LocalUserMediaStream, StreamState, UserMediaStream } from "@/components/stream";
 import clsx from "clsx";
 
 export function MeetToolbarAction(props: React.ButtonHTMLAttributes<HTMLButtonElement> & {  icon: JSX.Element }) {
@@ -16,11 +16,11 @@ export function MeetToolbarAction(props: React.ButtonHTMLAttributes<HTMLButtonEl
 }
 
 export class MeetToolbarHandler extends SimpleEventListener<"disconnect"> {
-    public readonly micState: StreamState
-    public readonly camState: StreamState
-    public readonly setMicState: (state: StreamState) => void;
-    public readonly setCamState: (state: StreamState) => void;
-    public readonly userMediaStream: MutableRefObject<LocalUserMediaStream | undefined>
+    public micState?: StreamState
+    public camState?: StreamState
+    public setMicState?: (state: StreamState) => void;
+    public setCamState?: (state: StreamState) => void;
+    public userMediaStream: MutableRefObject<LocalUserMediaStream | undefined>
 
     public on(type: "disconnect", listener: () => void): void
     {
@@ -34,24 +34,29 @@ export class MeetToolbarHandler extends SimpleEventListener<"disconnect"> {
 
     public constructor(stream: MutableRefObject<LocalUserMediaStream | undefined>) {
         super();
-        const [micState, setMicState] = useState<StreamState>("connected")
-        const [camState, setCamState] = useState<StreamState>("connected")
-        this.micState = micState
-        this.camState = camState
-        this.setMicState = (state) => setMicState(state)
-        this.setCamState = (state) => setCamState(state)
         this.userMediaStream = stream
 
         this.userMediaStream.current?.on('video', (state) => {
-            setCamState(state)
+            this.setCamState?.call(this, state)
         })
         this.userMediaStream.current?.on('audio', (state) => {
-            setMicState(state)
+            this.setMicState?.call(this, state)
         })
     } 
 }
 
-export function MeetToolbar(props: React.HTMLProps<HTMLDivElement> & { handler: MeetToolbarHandler }) {
+export default function MeetToolbar(props: React.HTMLProps<HTMLDivElement> & { handler: MeetToolbarHandler }) {
+
+    const [micState, setMicState] = useState<StreamState>("connected")
+    const [camState, setCamState] = useState<StreamState>("connected")
+
+    useEffect(() => {
+        props.handler.micState = micState
+        props.handler.camState = camState
+        props.handler.setMicState = (state: StreamState) => setMicState(state)
+        props.handler.setCamState = (state: StreamState) => setCamState(state)
+    }, [props.handler])
+
 
     async function toggleCamera() {
         if (props.handler.userMediaStream.current?.isVideoConnected()) {

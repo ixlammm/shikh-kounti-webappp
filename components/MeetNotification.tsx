@@ -1,5 +1,5 @@
-import { Button } from "./Button";
-import { MeetUserAvatar } from "./MeetUserAvatar";
+import Button from "./Button";
+import MeetUserAvatar from "./MeetUserAvatar";
 import { Notification, NotificationHandler } from "./Notification";
 import { SimpleEventListener, SimpleEventListenerType } from "./simpleEventListener";
 
@@ -33,11 +33,6 @@ export class UserRequestNotification extends Notification<MeetNotificationHandle
 }
 
 export class MeetNotificationHandler extends NotificationHandler {
-
-
-    public constructor() {
-        super()
-    }
 
     public showUserRequestNotification(name: string, initials: string,  onConfirm: (notif: Notification) => void) {
         return this.showNotification(new UserRequestNotification(this, name, initials, onConfirm))

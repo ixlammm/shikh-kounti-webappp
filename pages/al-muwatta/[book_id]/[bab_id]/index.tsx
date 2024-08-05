@@ -24,7 +24,7 @@ export async function getStaticPaths() {
                 bab_id: bab.bab_id.toString()
             }
         })),
-        fallback: false
+        fallback: "blocking"
     }
 }
 
@@ -34,7 +34,8 @@ export async function getStaticProps({ params }: { params: { book_id: string, ba
     return {
         props: {
             book: book
-        }
+        },
+        revalidate: 20,
     }
 }
 

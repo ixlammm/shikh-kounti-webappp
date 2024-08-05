@@ -1,5 +1,5 @@
 import { PiMicrophoneFill, PiMicrophoneSlashFill } from "react-icons/pi";
-import { ToastHandler, ToastState } from "./Toast";
+import { ToastHandler } from "@/components/Toast"; 
 import { BsFillCameraVideoFill, BsFillCameraVideoOffFill } from "react-icons/bs";
 
 export class MeetToastHandler extends ToastHandler {
